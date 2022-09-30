@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @EnableEncryptableProperties
 @SpringBootApplication
-public class MoneyActionApplication {
+public class ProjectApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MoneyActionApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProjectApplication.class, args);
+    }
 
 }

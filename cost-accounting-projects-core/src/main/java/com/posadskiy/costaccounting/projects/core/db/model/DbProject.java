@@ -15,4 +15,5 @@ public class DbProject {
 	private List<DbCategory> purchaseCategories;
 	private List<DbCategory> incomeCategories;
 	private Map<String, DbCategoryCurrentLimit> limits;
+    private Map<String, DbMonthStatistic> statistics;
 }
