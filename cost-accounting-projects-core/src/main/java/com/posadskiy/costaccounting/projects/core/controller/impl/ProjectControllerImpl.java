@@ -5,10 +5,13 @@ import com.posadskiy.costaccounting.moneyactions.api.dto.Purchase;
 import com.posadskiy.costaccounting.projects.core.controller.CategoryStatisticsController;
 import com.posadskiy.costaccounting.projects.core.controller.ProjectController;
 import com.posadskiy.costaccounting.projects.core.db.ProjectRepository;
+import com.posadskiy.costaccounting.projects.core.db.UserRepository;
 import com.posadskiy.costaccounting.projects.core.db.model.DbMonthStatistic;
 import com.posadskiy.costaccounting.projects.core.db.model.DbProject;
 import com.posadskiy.costaccounting.projects.core.db.model.DbStatisticCategory;
+import com.posadskiy.costaccounting.projects.core.db.model.DbUser;
 import com.posadskiy.costaccounting.projects.core.exception.ProjectDoesNotExistException;
+import com.posadskiy.costaccounting.projects.core.mapper.UserMapper;
 import com.posadskiy.costaccounting.projects.core.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -27,11 +31,13 @@ public class ProjectControllerImpl implements ProjectController {
 
     private final ProjectRepository projectRepository;
     private final CategoryStatisticsController categoryStatisticsController;
+    private final UserRepository userRepository;
     
     @Autowired
-    public ProjectControllerImpl(ProjectRepository projectRepository, CategoryStatisticsController categoryStatisticsController) {
+    public ProjectControllerImpl(ProjectRepository projectRepository, CategoryStatisticsController categoryStatisticsController, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.categoryStatisticsController = categoryStatisticsController;
+        this.userRepository = userRepository;
     }
 
 
@@ -77,8 +83,8 @@ public class ProjectControllerImpl implements ProjectController {
     }
 
     @Override
-    public void saveIncome(String id, Income income) {
-        DbProject project = this.getProject(id);
+    public void saveIncome(String projectId, Income income) {
+        DbProject project = this.getProject(projectId);
 		DbMonthStatistic statisticMonth = getDbMonthStatisticByProject(project, income.getDate());
 
 		final DbStatisticCategory dbStatisticCategory = statisticMonth
@@ -104,8 +110,8 @@ public class ProjectControllerImpl implements ProjectController {
 	}
 
     @Override
-    public void deletePurchase(String id, Purchase purchase) {
-        DbProject project = this.getProject(id);
+    public void deletePurchase(String projectId, Purchase purchase) {
+        DbProject project = this.getProject(projectId);
 		DbMonthStatistic statisticMonth = project.getStatistics().get(Utils.getMonthAndYear(purchase.getDate()));
 
 		categoryStatisticsController.decreaseMoneyActionToStatisticCategory(statisticMonth.getPurchaseCategories().get(purchase.getCategory().getId()), purchase);
@@ -114,13 +120,19 @@ public class ProjectControllerImpl implements ProjectController {
     }
 
     @Override
-    public void deleteIncome(String id, Income income) {
-        DbProject project = this.getProject(id);
+    public void deleteIncome(String projectId, Income income) {
+        DbProject project = this.getProject(projectId);
 		DbMonthStatistic statisticMonth = project.getStatistics().get(Utils.getMonthAndYear(income.getDate()));
 
 		categoryStatisticsController.decreaseMoneyActionToStatisticCategory(statisticMonth.getIncomeCategories().get(income.getCategory().getId()), income);
 
         this.save(project);
     }
+
+    public List<String> getAllUsersByProjectId(String projectId) {
+        final List<DbUser> allByProjectId = userRepository.findAllByProjectId(projectId);
+        return allByProjectId.stream().map(DbUser::getId).collect(Collectors.toList());
+    }
+
 }
 

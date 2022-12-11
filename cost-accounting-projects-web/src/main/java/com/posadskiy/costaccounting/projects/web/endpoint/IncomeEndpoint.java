@@ -1,6 +1,6 @@
 package com.posadskiy.costaccounting.projects.web.endpoint;
 
-import com.posadskiy.costaccounting.moneyactions.api.request.IncomeRequest;
+import com.posadskiy.costaccounting.projects.api.request.IncomeRequest;
 import com.posadskiy.costaccounting.projects.core.controller.ProjectController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +21,11 @@ public class IncomeEndpoint {
 
     @PostMapping("add")
     public void addIncome(@RequestBody final IncomeRequest incomeRequest) {
-        projectController.saveIncome(incomeRequest.getUserId(), incomeRequest.getIncome());
+        projectController.saveIncome(incomeRequest.getProjectId(), incomeRequest.getIncome());
     }
 
     @PostMapping("delete")
     public void deleteIncome(@RequestBody final IncomeRequest incomeRequest) {
-        projectController.deleteIncome(incomeRequest.getUserId(), incomeRequest.getIncome());
+        projectController.deleteIncome(incomeRequest.getProjectId(), incomeRequest.getIncome());
     }
 }

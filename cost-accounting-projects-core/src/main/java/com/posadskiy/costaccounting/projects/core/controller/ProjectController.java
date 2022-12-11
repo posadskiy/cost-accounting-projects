@@ -12,11 +12,13 @@ public interface ProjectController {
     DbProject getProject(String id);
 
     List<String> getMonths(String id);
-    void savePurchase(String id, Purchase purchase);
+    void savePurchase(String projectId, Purchase purchase);
 
     void saveIncome(String id, Income income);
 
-    void deletePurchase(String id, Purchase purchase);
+    void deletePurchase(String projectId, Purchase purchase);
 
     void deleteIncome(String id, Income income);
+
+    List<String> getAllUsersByProjectId(String projectId);
 }
