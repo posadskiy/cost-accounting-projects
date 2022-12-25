@@ -1,5 +1,7 @@
 package com.posadskiy.costaccounting.projects.core;
 
+import com.posadskiy.costaccounting.projects.core.mapper.CategoryMapper;
+import com.posadskiy.costaccounting.projects.core.mapper.CategoryMapperImpl;
 import com.posadskiy.costaccounting.projects.core.mapper.UserMapper;
 import com.posadskiy.costaccounting.projects.core.mapper.UserMapperImpl;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -17,5 +19,10 @@ public class SpringConfiguration {
     @Bean
     public UserMapper userMapper() {
         return new UserMapperImpl();
+    }
+    
+    @Bean
+    public CategoryMapper categoryMapper() {
+        return new CategoryMapperImpl();
     }
 }
